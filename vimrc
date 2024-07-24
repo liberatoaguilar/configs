@@ -30,6 +30,8 @@ set softtabstop=4
 set shiftwidth=4
 set expandtab
 set smartindent
+set autoindent
+set smarttab
 " Misc
 set backspace=indent,eol,start
 set nowrap
@@ -66,6 +68,7 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'prettier/vim-prettier', { 'do': 'npm install --frozen-lockfile --production' }
 Plug 'ryanoasis/vim-devicons'
 Plug 'madox2/vim-ai', { 'do': './install.sh' }
+Plug 'ap/vim-css-color'
 call plug#end()
 
 
@@ -130,6 +133,7 @@ autocmd BufWinEnter *.md setlocal tw=89
 autocmd BufWinEnter *.md setlocal wrap linebreak
 autocmd BufWinEnter *.md setlocal cc=91
 autocmd BufWinEnter *.md setlocal scrolloff=10
+autocmd BufWinEnter *.md setlocal nolist
 "autocmd BufWinEnter *.md highlight ColorColumn ctermbg=240
 "autocmd BufWinEnter *.md hi StatusLine ctermbg=none
 "hi Visual ctermbg=238
@@ -146,6 +150,15 @@ set wrap linebreak
 syn match markdownListMarker "\%(\t\| \{0,32\}\)[-*+]\%(\s\+\S\)\@=" contained
 "autocmd BufWinEnter *.md setlocal ft=markdown
 let g:markdown_fenced_languages = ['cpp','sql','vb','javascript','js=javascript','html', 'hs=haskell', 'java=java']
+
+" HTML / Vue Indent
+autocmd BufWinEnter *.vue setlocal tabstop=2 
+autocmd BufWinEnter *.vue setlocal softtabstop=2
+autocmd BufWinEnter *.vue setlocal shiftwidth=2
+autocmd BufWinEnter *.html setlocal tabstop=2 
+autocmd BufWinEnter *.html setlocal softtabstop=2
+autocmd BufWinEnter *.html setlocal shiftwidth=2
+
 
 " centers the current pane as the middle 2 of 4 imaginary columns
 " should be called in a window with a single pane
@@ -172,8 +185,8 @@ nnoremap <leader>h :call matchadd('LineHighlight', '\%'.line('.').'l')<cr>
 nnoremap <leader>H :call clearmatches()<cr>
 
 " Cycle Buffers
-nnoremap gb :bn<cr>
-nnoremap gB :bN<cr>
+nnoremap <Tab> :bn<cr>
+nnoremap <S-Tab> :bN<cr>
 
 " Cheat Sheet
 command CheatSheet :tabedit ~/Desktop/Misc/Vim/cheatSheet.md
@@ -218,3 +231,30 @@ imap <F12> <Esc>:GotoHeader <CR>
 " Copy and Paste
 noremap <leader>y "*y
 noremap <leader>p "*p
+
+" AI
+let g:vim_ai_complete = {
+\  "engine": "chat",
+\  "options": {
+\    "model": "gpt-4o-mini",
+\    "endpoint_url": "https://api.openai.com/v1/chat/completions",
+\    "max_tokens": 1000,
+\    "temperature": 0.2,
+\    "request_timeout": 20,
+\    "enable_auth": 1,
+\    "selection_boundary": "",
+\  },
+\  "ui": {
+\    "code_syntax_enabled": 1,
+\    "populate_options": 0,
+\    "open_chat_command": "preset_below",
+\    "scratch_buffer_keep_open": 0,
+\    "paste_mode": 1,
+\  },
+\}
+let g:vim_ai_token_file_path = '~/.config/openai.token'
+
+" Indent Lines
+"exe 'setlocal listchars=tab:\│\ ,multispace:\│' . repeat('\ ', &sw - 1)
+set list
+autocmd BufWinEnter * exe 'setlocal listchars=tab:\│\ ,multispace:\│' . repeat('\ ', &sw - 1)
